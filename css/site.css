@@ -193,7 +193,7 @@ h1, h2, h3, p { margin: 0; }
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--bg) 0%, rgba(247, 246, 243, 0.72) 7%, transparent 22%);
+  background: linear-gradient(90deg, var(--bg) 0%, rgba(247, 246, 243, 0.55) 3%, transparent 9%);
 }
 .hero-dots {
   position: absolute;
