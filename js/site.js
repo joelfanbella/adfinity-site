@@ -62,23 +62,35 @@ if (motionOk) {
     const index = groups.get(el.parentElement) || 0;
     groups.set(el.parentElement, index + 1);
     el.classList.add("reveal");
-    el.style.transitionDelay = `${Math.min(index, 4) * 80}ms`;
+    el.style.animationDelay = `${Math.min(index, 4) * 40}ms`;
   });
-  const mark = (entries) => {
-    (entries || reveal).forEach((entry) => {
-      const el = entry.target || entry;
-      if (el.classList.contains("is-in")) return;
+  const updateReveal = () => {
+    const viewHeight = window.innerHeight;
+    reveal.forEach((el) => {
       const box = el.getBoundingClientRect();
-      const visible = box.top < window.innerHeight * 0.92 && box.bottom > 24;
-      if (visible || entry.isIntersecting) el.classList.add("is-in");
+      const gone = box.bottom < viewHeight * 0.04 || box.top > viewHeight * 0.96;
+      if (gone) {
+        el.classList.remove("is-in");
+        return;
+      }
+      const entered = box.top < viewHeight * 0.84 && box.bottom > viewHeight * 0.05;
+      if (entered && !el.classList.contains("is-in")) el.classList.add("is-in");
     });
   };
   document.documentElement.classList.add("motion");
-  const seen = new IntersectionObserver(mark, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
-  reveal.forEach((el) => seen.observe(el));
-  mark();
-  requestAnimationFrame(mark);
-  window.addEventListener("load", mark, { once: true });
+  updateReveal();
+  let revealQueued = false;
+  const queueReveal = () => {
+    if (revealQueued) return;
+    revealQueued = true;
+    requestAnimationFrame(() => {
+      revealQueued = false;
+      updateReveal();
+    });
+  };
+  window.addEventListener("scroll", queueReveal, { passive: true });
+  window.addEventListener("resize", queueReveal);
+  window.addEventListener("load", updateReveal, { once: true });
 }
 
 document.querySelectorAll("form[data-enquiry]").forEach((form) => {
