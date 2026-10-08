@@ -13,10 +13,10 @@ Static HTML, CSS and a small shared script. Light mode only. No build step, data
 From this folder:
 
 ```bash
-python -m http.server 43187
+npm run dev
 ```
 
-Then open [http://localhost:43187](http://localhost:43187).
+Then open [http://127.0.0.1:43187](http://127.0.0.1:43187). Use that address (not `localhost`) on Windows so CSS and assets load reliably.
 
 ## Site structure
 
