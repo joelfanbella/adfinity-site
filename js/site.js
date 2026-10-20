@@ -65,6 +65,8 @@ if (motionOk) {
     el.style.animationDelay = `${Math.min(index, 6) * 90}ms`;
   });
   const heroImg = document.querySelector(".hero-photo img");
+  const turnStage = document.querySelector(".turn-stage");
+  const turnGrid = turnStage?.querySelector(".turn-grid");
   const driftImgs = [...document.querySelectorAll(".frame > img")].filter(
     (img) => !img.closest(".turn-grid")
   );
@@ -189,6 +191,17 @@ if (motionOk) {
       const rect = hero.getBoundingClientRect();
       const progress = Math.min(1, Math.max(0, -rect.top / Math.max(rect.height, 1)));
       heroImg.style.transform = `translate3d(0, ${progress * 72}px, 0) scale(${1.06 + progress * 0.08})`;
+    }
+    if (turnStage && turnGrid) {
+      const gridRect = turnGrid.getBoundingClientRect();
+      const stageRect = turnStage.getBoundingClientRect();
+      const start = viewHeight * 0.92;
+      const end = viewHeight * 0.18;
+      let fade = Math.min(1, Math.max(0, (start - gridRect.top) / Math.max(start - end, 1)));
+      /* Ease the fade out before the section ends so it doesn't hard-cut mid-screen */
+      const exit = Math.min(1, Math.max(0, (viewHeight * 0.55 - stageRect.bottom) / (viewHeight * 0.45)));
+      if (exit > 0) fade *= 1 - exit;
+      turnStage.style.setProperty("--turn-fade", fade.toFixed(3));
     }
     driftImgs.forEach((img) => {
       const rect = img.parentElement.getBoundingClientRect();
