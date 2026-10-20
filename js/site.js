@@ -55,8 +55,8 @@ if (heroSlides) {
 }
 if (motionOk) {
   const reveal = [...document.querySelectorAll(
-    "main .heading, main .card, main .person, main .frame, main .belief, main .quote-photo, main .quote-copy, main .stats, main .page-hero-grid > *, main .stack > li, main .timeline > li, main details.service, main .gallery, main .close .shell > *, main .prose"
-  )];
+    "main .heading, main .card, main .person, main .frame, main .quote-photo, main .quote-copy, main .stats, main .page-hero-grid > *, main .stack > li, main .timeline > li, main details.service, main .gallery, main .close .shell > *, main .prose"
+  )].filter((el) => !el.closest(".turn-grid"));
   const groups = new Map();
   reveal.forEach((el) => {
     const index = groups.get(el.parentElement) || 0;
@@ -65,7 +65,9 @@ if (motionOk) {
     el.style.animationDelay = `${Math.min(index, 6) * 90}ms`;
   });
   const heroImg = document.querySelector(".hero-photo img");
-  const driftImgs = [...document.querySelectorAll(".frame > img")];
+  const driftImgs = [...document.querySelectorAll(".frame > img")].filter(
+    (img) => !img.closest(".turn-grid")
+  );
   const storyReel = document.querySelector("[data-story-reel]");
   const storyScenes = storyReel ? [...storyReel.querySelectorAll("[data-scene]")] : [];
   let storyStep = 0;
@@ -102,14 +104,6 @@ if (motionOk) {
         requestAnimationFrame(() => slogan.classList.add("is-in"));
       }
       scene.style.pointerEvents = current && sloganOn ? "auto" : "none";
-      if (!current && scene.classList.contains("is-open")) {
-        scene.classList.remove("is-open");
-        const button = scene.querySelector(".story-scene-more");
-        if (button) {
-          button.textContent = "Read more";
-          button.setAttribute("aria-expanded", "false");
-        }
-      }
     });
   };
   if (storyReel) {
@@ -218,15 +212,6 @@ if (motionOk) {
   window.addEventListener("resize", queueMotion);
   window.addEventListener("load", updateMotion, { once: true });
 }
-
-document.querySelectorAll(".story-scene-more").forEach((button) => {
-  button.addEventListener("click", () => {
-    const scene = button.closest(".story-scene");
-    const open = scene.classList.toggle("is-open");
-    button.setAttribute("aria-expanded", String(open));
-    button.textContent = open ? "Close" : "Read more";
-  });
-});
 
 document.querySelectorAll("form[data-enquiry]").forEach((form) => {
   form.addEventListener("submit", (event) => {
