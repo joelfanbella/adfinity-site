@@ -897,8 +897,41 @@ html.motion .frame:hover { transform: translateY(-8px); }
 }
 .year-mark { font-family: var(--serif); font-size: 1.6rem; line-height: 0.9; }
 .story-grid { grid-template-columns: 1fr 1fr; }
-.turn-grid { grid-template-columns: repeat(3, 1fr); }
+.turn-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px 24px;
+  align-items: start;
+}
 .story-grid .frame, .turn-grid .frame { min-height: 280px; }
+.turn-grid .frame { width: 460px; min-height: 400px; }
+.turn-grid .frame:nth-child(1) { grid-column: 1; grid-row: 1; justify-self: start; margin-left: 72px; }
+.turn-grid .frame:nth-child(2) { grid-column: 3; grid-row: 2; justify-self: end; margin-right: 72px; }
+.turn-grid .frame:nth-child(3) { grid-column: 2; grid-row: 3; justify-self: center; }
+html.motion .turn-grid .frame:hover { transform: none; }
+.turn-grid .frame:focus-visible { outline: 2px solid #fdba74; outline-offset: 3px; }
+.turn-grid .frame::after { transition: background .45s ease; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .turn-grid .frame { height: 400px; container-type: size; }
+  .turn-grid .frame-copy { position: absolute; inset: 0; padding: 28px 0 28px 22px; }
+  .turn-peek,
+  .turn-body {
+    position: absolute;
+    left: 22px;
+    right: 0;
+    margin: 0;
+    transition: transform .65s cubic-bezier(.16, .84, .32, 1);
+  }
+  .turn-peek { bottom: 28px; }
+  .turn-grid .turn-body { top: 28px; max-width: none; margin: 0; transform: translateY(100cqh); }
+  .turn-grid .frame:hover .turn-peek,
+  .turn-grid .frame:focus-within .turn-peek { transform: translateY(calc(-100cqh - 100%)); }
+  .turn-grid .frame:hover .turn-body,
+  .turn-grid .frame:focus-within .turn-body { transform: translateY(0); }
+  .turn-grid .frame:hover::after,
+  .turn-grid .frame:focus-within::after {
+    background: linear-gradient(180deg, rgba(12, 10, 9, 0.72) 0%, rgba(12, 10, 9, 0.5) 48%, rgba(12, 10, 9, 0.62) 100%);
+  }
+}
 .story-more { margin-top: 12px; max-width: 40rem; }
 .story-more summary {
   cursor: pointer;
@@ -912,6 +945,43 @@ html.motion .frame:hover { transform: translateY(-8px); }
 .belief { text-align: center; padding: 64px 20px 28px; }
 .belief h2 { max-width: 18ch; margin: 10px auto 0; }
 .belief p { margin: 14px auto 0; }
+.turn-stage { position: relative; }
+.turn-spacer { height: 85vh; }
+.turn-stage .belief {
+  position: sticky;
+  top: calc(50vh - 1.35em);
+  z-index: 0;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  font-size: clamp(3.6rem, 10vw, 8.75rem);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-align: center;
+  pointer-events: none;
+}
+.turn-stage .belief h2 {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  font-size: 1em;
+  line-height: 0.9;
+  letter-spacing: inherit;
+  text-align: center;
+}
+.turn-stage .turn-grid { position: relative; z-index: 2; margin-top: 62vh; }
+.turn-grid .frame-copy h3 { font-size: clamp(1.4rem, 2vw, 1.8rem); }
+.turn-grid .year-mark { font-size: 2rem; }
+.turn-grid .turn-body { font-size: 1.15rem; line-height: 1.45; }
+html.motion .turn-stage .belief.reveal,
+html.motion .turn-stage .belief.reveal.is-in,
+html.motion .turn-grid .frame.reveal,
+html.motion .turn-grid .frame.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
 .biz-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .biz-grid .frame { min-height: 300px; }
 .biz-grid .frame h3 { font-size: clamp(1.15rem, 1.5vw, 1.4rem); }
@@ -1079,7 +1149,10 @@ html.motion .frame:hover { transform: translateY(-8px); }
   transition: opacity .45s ease, transform .45s ease;
   pointer-events: none;
 }
+.story-scene-text p { margin: 0; }
+.story-scene-text p + p { margin-top: 0.85em; }
 .story-scene.is-open .story-scene-text { opacity: 1; transform: none; }
+.story-scene.is-open .story-scene-slot:has(.story-scene-text p + p) { min-height: 18rem; }
 html.motion .story-reel { height: 700vh; }
 html.motion .story-reel-pin {
   position: sticky;
@@ -1123,6 +1196,8 @@ html.motion .story-scene-slogan-move.is-in { transform: none; opacity: 1; }
 @media (max-width: 720px) {
   .story-reel-head h2 { font-size: 0.92rem; }
   .story-reel-stage { margin: 10px 16px 16px; }
+  .story-scene.is-open .story-scene-text:has(p + p) { font-size: 0.98rem; }
+  .story-scene.is-open .story-scene-slot:has(.story-scene-text p + p) { min-height: 26rem; }
 }
 .scroll-story {
   position: relative;
@@ -1193,8 +1268,32 @@ html.motion .mask > [data-line] { display: block; transform: translate3d(0, 120%
 .hero-photo img { will-change: transform; }
 @media (max-width: 959px) {
   .band { width: min(100% - 28px, 1280px); }
-  .story-grid, .turn-grid, .biz-grid, .project-grid { grid-template-columns: 1fr; }
+  .story-grid, .biz-grid, .project-grid { grid-template-columns: 1fr; }
+  .turn-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 0; }
+  .turn-stage { display: block; }
+  .turn-spacer { height: 0; }
+  .turn-stage .belief {
+    position: static;
+    top: auto;
+    height: auto;
+    display: block;
+    padding: 8px 20px 28px;
+    font-size: clamp(2.5rem, 12vw, 3.6rem);
+    pointer-events: auto;
+  }
   .story-grid .frame, .turn-grid .frame, .biz-grid .frame, .project-grid .frame { min-height: 240px; }
+  .turn-grid .frame,
+  .turn-grid .frame:nth-child(1),
+  .turn-grid .frame:nth-child(2),
+  .turn-grid .frame:nth-child(3) {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: stretch;
+    width: auto;
+    min-height: 360px;
+    height: auto;
+    margin: 0;
+  }
   .quote-band .shell { width: min(100% - 28px, 1240px); }
   .quote-layout { grid-template-columns: 1fr; gap: 22px; }
   .quote-photo { max-width: 320px; }
@@ -1202,5 +1301,7 @@ html.motion .mask > [data-line] { display: block; transform: translate3d(0, 120%
 }
 @media (min-width: 700px) and (max-width: 959px) {
   .story-grid, .biz-grid, .project-grid { grid-template-columns: 1fr 1fr; }
-  .turn-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 959px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .turn-grid .frame { height: 360px; }
 }
