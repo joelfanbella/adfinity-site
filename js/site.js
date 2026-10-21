@@ -193,14 +193,8 @@ if (motionOk) {
       heroImg.style.transform = `translate3d(0, ${progress * 72}px, 0) scale(${1.06 + progress * 0.08})`;
     }
     if (turnStage && turnGrid) {
-      const gridRect = turnGrid.getBoundingClientRect();
-      const stageRect = turnStage.getBoundingClientRect();
-      const start = viewHeight * 0.92;
-      const end = viewHeight * 0.18;
-      let fade = Math.min(1, Math.max(0, (start - gridRect.top) / Math.max(start - end, 1)));
-      /* Ease the fade out before the section ends so it doesn't hard-cut mid-screen */
-      const exit = Math.min(1, Math.max(0, (viewHeight * 0.55 - stageRect.bottom) / (viewHeight * 0.45)));
-      if (exit > 0) fade *= 1 - exit;
+      const beliefRect = turnStage.querySelector(".belief").getBoundingClientRect();
+      const fade = Math.min(1, Math.max(0, (72 - beliefRect.bottom) / 72));
       turnStage.style.setProperty("--turn-fade", fade.toFixed(3));
     }
     driftImgs.forEach((img) => {
