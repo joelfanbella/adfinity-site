@@ -190,12 +190,15 @@ if (motionOk) {
       const hero = heroImg.closest(".hero");
       const rect = hero.getBoundingClientRect();
       const progress = Math.min(1, Math.max(0, -rect.top / Math.max(rect.height, 1)));
-      heroImg.style.transform = `translate3d(0, ${progress * 72}px, 0) scale(${1.06 + progress * 0.08})`;
+      heroImg.style.transform = progress > 0 ? `translate3d(0, ${progress * 48}px, 0)` : "";
     }
     if (turnStage && turnGrid) {
-      const beliefRect = turnStage.querySelector(".belief").getBoundingClientRect();
-      const fade = Math.min(1, Math.max(0, (72 - beliefRect.bottom) / 72));
-      turnStage.style.setProperty("--turn-fade", fade.toFixed(3));
+      const belief = turnStage.querySelector(".belief");
+      if (belief) {
+        const beliefRect = belief.getBoundingClientRect();
+        const fade = Math.min(1, Math.max(0, (72 - beliefRect.bottom) / 72));
+        turnStage.style.setProperty("--turn-fade", fade.toFixed(3));
+      }
     }
     driftImgs.forEach((img) => {
       const rect = img.parentElement.getBoundingClientRect();
