@@ -240,3 +240,56 @@ document.querySelectorAll("form[data-enquiry]").forEach((form) => {
     window.location.href = `mailto:hello@adfinityglobal.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
   });
 });
+
+const turnFrames = document.querySelectorAll(".turn-grid .frame");
+if (turnFrames.length) {
+  turnFrames.forEach((frame) => {
+    frame.addEventListener("click", () => {
+      const isOpen = frame.classList.contains("is-open");
+      if (isOpen) {
+        frame.classList.remove("is-open");
+        frame.classList.add("is-closed");
+        frame.blur();
+      } else {
+        turnFrames.forEach((f) => {
+          if (f !== frame) {
+            f.classList.remove("is-open");
+            f.classList.remove("is-closed");
+          }
+        });
+        frame.classList.remove("is-closed");
+        frame.classList.add("is-open");
+      }
+    });
+
+    frame.addEventListener("mouseleave", () => {
+      frame.classList.remove("is-closed");
+    });
+
+    frame.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        frame.click();
+      }
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".turn-grid .frame")) {
+      turnFrames.forEach((f) => {
+        f.classList.remove("is-open");
+        f.classList.remove("is-closed");
+      });
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      turnFrames.forEach((f) => {
+        f.classList.remove("is-open");
+        f.classList.remove("is-closed");
+        f.blur();
+      });
+    }
+  });
+}

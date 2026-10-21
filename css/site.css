@@ -1109,12 +1109,13 @@ html.motion .turn-grid .frame:hover { transform: none; }
   }
   .turn-peek { bottom: 28px; }
   .turn-grid .turn-body { top: 28px; max-width: none; margin: 0; transform: translateY(100cqh); }
-  .turn-grid .frame:hover .turn-peek,
-  .turn-grid .frame:focus-within .turn-peek { transform: translateY(calc(-100cqh - 100%)); }
-  .turn-grid .frame:hover .turn-body,
-  .turn-grid .frame:focus-within .turn-body { transform: translateY(0); }
-  .turn-grid .frame:hover::after,
-  .turn-grid .frame:focus-within::after {
+  .turn-grid .frame { cursor: pointer; }
+  .turn-grid .frame.is-open .turn-peek,
+  .turn-grid .frame:hover:not(.is-closed) .turn-peek { transform: translateY(calc(-100cqh - 100%)); }
+  .turn-grid .frame.is-open .turn-body,
+  .turn-grid .frame:hover:not(.is-closed) .turn-body { transform: translateY(0); }
+  .turn-grid .frame.is-open::after,
+  .turn-grid .frame:hover:not(.is-closed)::after {
     background: linear-gradient(180deg, rgba(12, 10, 9, 0.72) 0%, rgba(12, 10, 9, 0.5) 48%, rgba(12, 10, 9, 0.62) 100%);
   }
 }
@@ -1132,7 +1133,7 @@ html.motion .turn-grid .frame:hover { transform: none; }
 .belief h2 { max-width: 18ch; margin: 10px auto 0; }
 .belief p { margin: 14px auto 0; }
 .turns-band {
-  background: #f7f6f3;
+  background: #efeae3;
   padding-bottom: clamp(48px, 8vh, 88px);
 }
 .turns-band .section-intro {

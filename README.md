@@ -29,7 +29,7 @@ Then open [http://127.0.0.1:43187](http://127.0.0.1:43187). Use that address (no
 | `/display-technologies` | LED and digital display practice, four product families, 19 product lines |
 | `/display-technologies/[slug]` | Product page: overview, key specifications, applications, technical information, visuals, enquiry form |
 | `/ecosystem/fanbella` | Entertainment ecosystem built around participation |
-| `/ecosystem/csir` | Responsibility initiative with its own visual identity (sample content — see below) |
+| `/ecosystem/csr` | Responsibility initiative with its own visual identity (sample content — see below) |
 | `/ecosystem/whats-next` | Possibilities being explored or still taking shape |
 | `/projects` | Selected projects and client brands |
 | `/projects/[slug]` | Project page: scope, outcome, metrics |
@@ -65,6 +65,6 @@ These are intentional and flagged in the code:
 
 - **Imagery** — product and project visuals are rendered procedurally by `src/components/display-visual.tsx`, keyed off each item's slug. Replace with photography by swapping that component for `next/image`.
 - **Brand logos** — `src/components/logo.tsx` renders typographic lockups (`BrandMark`) where real client logo files would sit.
-- **CSIR copy** — the page carries sample content in the final shape; the page states this on screen. Real copy drops into `src/app/ecosystem/csir/page.tsx`.
+- **CSR copy** — the page carries sample content in the final shape; the page states this on screen. Real copy drops into `src/app/ecosystem/csir/page.tsx`.
 - **Leadership** — `src/lib/people.ts` holds role-based entries rather than invented names and bios.
 - **Enquiry form** — `POST /api/enquiry` validates and logs server-side. Point it at the real email, CRM or webhook destination when credentials exist.
