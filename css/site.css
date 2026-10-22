@@ -69,6 +69,13 @@ strong { font-weight: 600; }
 .lead { color: var(--muted); font-size: 1.05rem; max-width: 42rem; }
 .muted { color: var(--muted); }
 .accent { color: var(--accent); }
+.hero h1 { text-shadow: 0 1px 10px rgba(0,0,0,0.38); }
+.hero .accent {
+  background: linear-gradient(90deg, #ddb870 0%, #e87020 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 .mast {
   position: sticky;
@@ -1194,26 +1201,30 @@ html.motion .turn-grid .frame:hover { transform: none; }
 .biz-grid .frame { min-height: 300px; }
 .biz-grid .frame h3 { font-size: clamp(1.15rem, 1.5vw, 1.4rem); }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .biz-grid .frame { height: 360px; container-type: size; }
-  .biz-grid .frame-copy { position: absolute; inset: 0; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .biz-grid .frame { height: 360px; }
+  .biz-grid .frame-copy { position: absolute; inset: 0; }
   .biz-grid .biz-title {
     position: absolute;
     left: 20px; right: 20px; bottom: 20px;
-    transition: transform .55s cubic-bezier(.16, .84, .32, 1);
+    transition: transform .45s cubic-bezier(.16, .84, .32, 1);
   }
   .biz-grid .biz-detail {
     position: absolute;
     left: 20px; right: 20px; bottom: 20px;
-    transform: translateY(100cqh);
-    transition: transform .55s cubic-bezier(.16, .84, .32, 1);
+    transform: translateY(calc(100% + 20px));
+    opacity: 0;
+    transition: transform .45s cubic-bezier(.16, .84, .32, 1), opacity .35s ease;
   }
+  .biz-grid .biz-detail .frame-kicker,
+  .biz-grid .biz-detail h3 { display: none; }
+  .biz-grid .biz-detail p { font-size: 0.85rem; line-height: 1.45; margin-top: 0; }
   .biz-grid .frame:hover .biz-title,
-  .biz-grid .frame:focus-within .biz-title { transform: translateY(calc(-100cqh - 100%)); }
+  .biz-grid .frame:focus-within .biz-title { transform: translateY(-88px); }
   .biz-grid .frame:hover .biz-detail,
-  .biz-grid .frame:focus-within .biz-detail { transform: translateY(0); }
+  .biz-grid .frame:focus-within .biz-detail { transform: translateY(0); opacity: 1; }
   .biz-grid .frame:hover::after,
   .biz-grid .frame:focus-within::after {
-    background: linear-gradient(180deg, rgba(12,10,9,0.65) 0%, rgba(12,10,9,0.48) 48%, rgba(12,10,9,0.72) 100%);
+    background: linear-gradient(180deg, rgba(12,10,9,0.55) 0%, rgba(12,10,9,0.42) 48%, rgba(12,10,9,0.72) 100%);
   }
 }
 .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
