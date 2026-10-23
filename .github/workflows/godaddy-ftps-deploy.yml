@@ -1,0 +1,91 @@
+name: Safe GoDaddy FTPS deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview every proposed upload only (recommended first run)"
+        required: true
+        type: boolean
+        default: true
+      confirm_live_deploy:
+        description: "Set true only after reviewing a successful dry run"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: FTPS ${{ inputs.dry_run && 'dry run' || 'live deployment' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Refuse an unconfirmed live deployment
+        if: ${{ !inputs.dry_run && !inputs.confirm_live_deploy }}
+        run: |
+          echo "Live deployment requires confirm_live_deploy=true after a reviewed dry run."
+          exit 1
+
+      - name: Check out the selected revision
+        uses: actions/checkout@v4
+
+      - name: Build a deploy-only staging directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          staging_dir="$RUNNER_TEMP/deploy"
+          mkdir -p "$staging_dir"
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='dev-1-fanbella-adfinity-prime-ee72e56/' \
+            --exclude='node_modules/' \
+            --exclude='work/' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='README.md' \
+            --exclude='AGENTS.md' \
+            --exclude='CLAUDE.md' \
+            --exclude='.gitignore' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            ./ "$staging_dir/"
+          echo "Files staged for deployment:"
+          (cd "$staging_dir" && find . -type f -print | sort)
+
+      - name: Install FTPS client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes lftp
+
+      - name: Preview or upload with FTPS (never delete remote files)
+        env:
+          FTP_SERVER: ${{ secrets.GODADDY_FTPS_SERVER }}
+          FTP_USERNAME: ${{ secrets.GODADDY_FTPS_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.GODADDY_FTPS_PASSWORD }}
+          FTP_TARGET_DIR: ${{ secrets.GODADDY_FTPS_TARGET_DIR }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${FTP_SERVER:?Add GODADDY_FTPS_SERVER in GitHub Actions secrets}"
+          : "${FTP_USERNAME:?Add GODADDY_FTPS_USERNAME in GitHub Actions secrets}"
+          : "${FTP_PASSWORD:?Add GODADDY_FTPS_PASSWORD in GitHub Actions secrets}"
+          : "${FTP_TARGET_DIR:?Add GODADDY_FTPS_TARGET_DIR in GitHub Actions secrets}"
+
+          mirror_args=(--reverse --verbose --only-newer --no-delete)
+          if [ "$DRY_RUN" = "true" ]; then
+            mirror_args+=(--dry-run)
+          fi
+
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<EOF
+          set cmd:fail-exit yes
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate true
+          mirror ${mirror_args[*]} "$RUNNER_TEMP/deploy/" "$FTP_TARGET_DIR"
+          bye
+          EOF
