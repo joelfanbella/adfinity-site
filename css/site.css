@@ -999,6 +999,7 @@ address { font-style: normal; }
   .gallery.network img { grid-column: auto; height: 220px; }
   .gallery img.fanbella-set { height: 250px; }
   .page-hero img.photo { height: 220px; }
+  .csr-intro .page-hero-grid > img.photo { height: 280px; min-height: 0; }
   .page-hero img.photo.app-poster { height: 460px; min-height: 460px; }
 }
 @media (min-width: 700px) and (max-width: 959px) {
@@ -1600,5 +1601,36 @@ html.motion .mask > [data-line] { display: block; transform: translate3d(0, 120%
     max-width: none;
     height: calc(320px + 18vh);
     min-height: calc(320px + 18vh);
+  }
+}
+
+@media (min-width: 960px) {
+  .csr-intro .page-hero-grid { align-items: stretch; }
+  .csr-intro .page-hero-grid > img.photo {
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+  }
+}
+.csr-intro .eyebrow { display: block; }
+.csr-intro h1 { margin-top: 12px; max-width: 16ch; }
+.csr-copy { margin-top: 8px; }
+.csr-copy p { margin-top: 16px; line-height: 1.7; }
+.csr-grid .frame-copy h2,
+.csr-grid .frame-copy h3 {
+  font-size: clamp(1.45rem, 2.15vw, 2.05rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+.csr-grid .turn-body p + p { margin-top: 0.8em; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .csr-grid .turn-peek,
+  .csr-grid .turn-body { right: 22px; }
+  .csr-grid .turn-body {
+    max-height: calc(100cqh - 56px);
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
   }
 }
