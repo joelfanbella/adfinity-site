@@ -81,7 +81,7 @@ jobs:
             mirror_args+=(--dry-run)
           fi
 
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftps://$FTP_SERVER:21" <<EOF
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<EOF
           set cmd:fail-exit yes
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
