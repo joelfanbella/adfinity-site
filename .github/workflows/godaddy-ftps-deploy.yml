@@ -81,12 +81,11 @@ jobs:
             mirror_args+=(--dry-run)
           fi
 
-          lftp <<EOF
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftps://$FTP_SERVER:21" <<EOF
           set cmd:fail-exit yes
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate true
-          open -u "$FTP_USERNAME","$FTP_PASSWORD" "ftps://$FTP_SERVER:21"
           mirror ${mirror_args[*]} "$RUNNER_TEMP/deploy/" "$FTP_TARGET_DIR"
           bye
           EOF
