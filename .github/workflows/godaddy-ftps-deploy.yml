@@ -82,6 +82,12 @@ jobs:
             -verify_hostname sg2plzcpnl506761.prod.sin2.secureserver.net \
             -verify_return_error 2>&1 \
             | grep -E "Verification:|Verify return code:|verify error|CONNECTED"
+            
+          echo "Checking FTP account on candidate server:"
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" \
+            "ftp://sg2plzcpnl506761.prod.sin2.secureserver.net:21" \
+            -e 'set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate true; pwd; cls -1; bye'
+
 
 
       - name: Preview or upload with FTPS (never delete remote files)
