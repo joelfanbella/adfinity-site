@@ -60,6 +60,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes lftp
+          
+      - name: Diagnose FTPS certificate
+        run: |
+          echo | openssl s_client \
+            -starttls ftp \
+            -connect ftp.adfinityglobal.com:21 \
+            -servername ftp.adfinityglobal.com 2>/dev/null \
+            | openssl x509 -noout -subject -ext subjectAltName
+
 
       - name: Preview or upload with FTPS (never delete remote files)
         env:
