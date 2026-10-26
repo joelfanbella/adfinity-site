@@ -68,7 +68,8 @@ jobs:
             -connect ftp.adfinityglobal.com:21 \
             -servername ftp.adfinityglobal.com 2>/dev/null \
             | openssl x509 -noout -subject -ext subjectAltName
-
+          echo "FTP DNS information:"
+          getent hosts ftp.adfinityglobal.com
 
       - name: Preview or upload with FTPS (never delete remote files)
         env:
