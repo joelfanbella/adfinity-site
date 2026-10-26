@@ -70,6 +70,19 @@ jobs:
             | openssl x509 -noout -subject -ext subjectAltName
           echo "FTP DNS information:"
           getent hosts ftp.adfinityglobal.com
+          
+          echo "Testing GoDaddy server hostname:"
+          getent ahostsv4 sg2plzcpnl506761.prod.sin2.secureserver.net
+
+          echo "Testing FTPS certificate:"
+          echo | openssl s_client \
+            -starttls ftp \
+            -connect sg2plzcpnl506761.prod.sin2.secureserver.net:21 \
+            -servername sg2plzcpnl506761.prod.sin2.secureserver.net \
+            -verify_hostname sg2plzcpnl506761.prod.sin2.secureserver.net \
+            -verify_return_error 2>&1 \
+            | grep -E "Verification:|Verify return code:|verify error|CONNECTED"
+
 
       - name: Preview or upload with FTPS (never delete remote files)
         env:
