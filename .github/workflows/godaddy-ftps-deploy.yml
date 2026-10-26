@@ -76,7 +76,7 @@ jobs:
           : "${FTP_PASSWORD:?Add GODADDY_FTPS_PASSWORD in GitHub Actions secrets}"
           : "${FTP_TARGET_DIR:?Add GODADDY_FTPS_TARGET_DIR in GitHub Actions secrets}"
 
-          mirror_args=(--reverse --verbose --only-newer --no-delete)
+          mirror_args=(--reverse --verbose --only-newer)
           if [ "$DRY_RUN" = "true" ]; then
             mirror_args+=(--dry-run)
           fi
