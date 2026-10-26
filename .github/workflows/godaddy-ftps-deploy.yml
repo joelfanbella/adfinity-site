@@ -62,6 +62,9 @@ jobs:
           sudo apt-get install --yes lftp
           
       - name: Diagnose FTPS certificate
+        env:
+          FTP_USERNAME: ${{ secrets.GODADDY_FTPS_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.GODADDY_FTPS_PASSWORD }}
         run: |
           echo | openssl s_client \
             -starttls ftp \
